@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>VAT / VIES · Схема и план тестирования</title>
+<style>
+:root{--ink:#132323;--muted:#466063;--paper:#f7f7f0;--line:#d8dfd4;--green:#116452;--mint:#e1f0e7;--blue:#234f80;--ice:#e9f0fb;--plum:#79343d;--rose:#fae8e5;--white:#fff;--dark:#103e36;--amber:#745019;--sand:#fbefce}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,sans-serif}a{color:var(--green);text-underline-offset:3px;overflow-wrap:anywhere}a:focus-visible,summary:focus-visible,button:focus-visible{outline:3px solid #a86413;outline-offset:3px}h1,h2,h3,p{margin:0}p+p{margin-top:.75rem}h2{font-size:clamp(1.7rem,4vw,2.65rem);line-height:1.12;letter-spacing:-.04em;margin-bottom:1rem}h3{line-height:1.25;margin-bottom:.45rem}code{font: .88em ui-monospace,monospace;overflow-wrap:anywhere;background:#eff1ed;padding:.1em .22em;border-radius:.23em}header{background:var(--dark);color:#fff;padding:3.8rem max(1.2rem,calc((100% - 1120px)/2)) 2.7rem}header a{color:#a5edcf}header h1{font-size:clamp(2.6rem,8vw,5.5rem);line-height:.99;letter-spacing:-.065em;margin:.75rem 0 1.35rem;max-width:11em}header p{max-width:56ch;color:#daeee4;font-size:1.09rem}.kicker{font:700 .83rem/1.4 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}nav{display:flex;flex-wrap:wrap;gap:.45rem 1rem;margin-top:1.65rem}main{max-width:1170px;margin:auto;padding:0 clamp(1rem,4vw,2rem) 2.5rem}section{padding:2.35rem 0;border-bottom:1px solid var(--line);scroll-margin-top:1rem}.intro{max-width:80ch;color:var(--muted);margin-bottom:1rem}.tags{display:flex;flex-wrap:wrap;gap:.55rem;margin:1rem 0}.badge{display:inline-block;font-size:.75rem;font-weight:750;border-radius:100px;padding:.23rem .56rem;line-height:1.25;white-space:normal}.live{background:var(--mint);color:var(--green)}.epic{background:var(--ice);color:var(--blue)}.pr{background:var(--rose);color:var(--plum)}.open{background:var(--sand);color:var(--amber)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}.card,.node,.note{background:var(--white);border:1px solid var(--line);border-radius:13px;padding:1rem}.card p,.node p{color:var(--muted)}.card h3,.node h3{margin-top:.55rem}.card code,.node code{font-size:.81em}.flow{border:1px solid var(--line);background:#eef1e8;border-radius:18px;padding:clamp(.7rem,3vw,1.5rem);margin-top:1.1rem}.node{border-top:4px solid #678b7d}.node.ep{border-top-color:var(--blue)}.node.wait{border-top-color:var(--plum)}.single{width:min(100%,44rem);margin:auto}.down{padding:.36rem;text-align:center;color:#385c58;font-weight:750;font-size:.85rem}.down::before{content:"↓";padding-right:.4em;font-size:1.15em}.note{border-left:5px solid #9d741d;background:#fff8e7;margin:.85rem 0}.table{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#fff;margin:1rem 0}table{border-collapse:collapse;width:100%;min-width:680px}th,td{text-align:left;vertical-align:top;padding:.68rem .75rem;border-bottom:1px solid var(--line)}th{font-size:.85rem;background:#e8eee3}tr:last-child td{border-bottom:0}td p+p{margin-top:.35rem}.small{font-size:.9rem;color:var(--muted)}ul,ol{padding-left:1.26rem;margin:.6rem 0}li+li{margin-top:.36rem}details{border:1px solid var(--line);border-radius:12px;background:#fff;padding:.6rem .9rem;margin:.55rem 0}summary{cursor:pointer;font-weight:710;padding:.2rem}.stage{margin-top:1.45rem}.stage h3{font-size:1.32rem}.id{font:700 .83rem ui-monospace,monospace;white-space:nowrap}.foot{color:var(--muted);padding-top:1.5rem}.scroll{color:var(--muted);font-size:.82rem;margin-bottom:-.6rem}.diagram .grid+h3{margin-top:1.15rem}
+@media(max-width:720px){header{padding-top:2.6rem}.grid{grid-template-columns:1fr}section{padding:1.75rem 0}.card,.node{padding:.8rem}}
+@media print{*{print-color-adjust:exact;-webkit-print-color-adjust:exact}header{padding:1.3rem}header h1{font-size:2.4rem}nav,.scroll{display:none}main{padding:0}section{padding:1.2rem 0}table{min-width:0;font-size:10pt}th,td{padding:.35rem}tr,.node,.card{break-inside:avoid}a{color:inherit}}
+.domain-block{margin-top:1.35rem}.domain-block pre{overflow:auto;background:#edf1eb;border:1px solid var(--line);border-radius:9px;padding:.7rem .85rem;font-size:.9rem}.domain-block pre code{background:transparent;white-space:pre;overflow-wrap:normal;padding:0}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Проверка VAT / руководство по тестированию</div>
+  <h1>VAT при сбое VIES</h1>
+  <p>Как обработать недоступность реестра при покупке, дать покупателю время исправить номер и проверить финансовый результат.</p>
+  <nav aria-label="Разделы"><a href="#map">Схема</a><a href="#domains">Домены и стенд</a><a href="#plan">План проверки</a><a href="#release">Выпуск</a></nav>
+</header>
+<main>
+<section id="map" aria-labelledby="map-title">
+  <h2 id="map-title">Схема работы</h2>
+  <p class="intro">Номер может соответствовать формату страны и при этом отсутствовать в VIES. Когда реестр доступен, его ответ определяет результат проверки. Когда реестр недоступен, решение о продолжении покупки зависит от настройки продавца.</p>
+  <div class="flow">
+    <div class="node single"><h3>Покупатель вводит EU VAT номер</h3><p>Проверяем страну, префикс и структуру. Для корректной структуры запрашиваем VIES.</p></div>
+    <div class="down">Результат проверки</div>
+    <div class="grid">
+      <div class="node"><h3>Неправильный формат или invalid</h3><p>Показать ошибку и прервать оформление с этим номером. Фоновая проверка не нужна.</p></div>
+      <div class="node"><h3>Valid</h3><p>Продолжить покупку и применить VAT по правилам операции.</p></div>
+      <div class="node ep"><h3>Реестр временно недоступен</h3><p>При выключенном fallback попросить повторить попытку позже. При включённом продолжить применимую покупку и запланировать проверку.</p></div>
+    </div>
+    <div class="down">При включённом fallback</div>
+    <div class="node single ep"><h3>Фоновая проверка</h3><p>Повторять временные ошибки по политике очереди. Подтверждённый valid завершает случай. Подтверждённый invalid открывает период исправления.</p></div>
+    <div class="down">VIES ответил invalid</div>
+    <div class="grid">
+      <div class="node ep"><h3>Дни 0, 3 и 6</h3><p>Покупатель получает письма со ссылкой исправления. День 0 отсчитывается от отрицательного ответа, а не от оплаты.</p></div>
+      <div class="node ep"><h3>Покупатель исправил номер</h3><p>Форма требует подтверждённого ответа VIES. После успеха ссылка закрывается, напоминания и финальное действие пропускаются.</p></div>
+      <div class="node wait"><h3>День 7 без исправления</h3><p>Применить правило продавца: сохранить продажу и убрать VAT-номер из счёта, вернуть разовый платёж или прекратить будущие списания обычной подписки. Покупатель и продавец получают подтверждение результата.</p></div>
+    </div>
+  </div>
+  <div class="note">Для обычной подписки проверяем отсутствие будущих списаний и сохранение оплаченного периода. Для оплаты частями отдельно согласовываем возврат, будущие взносы и доступ.</div>
+</section>
+
+<section id="domains" aria-labelledby="domains-title">
+  <h2 id="domains-title">Домены и тестовый стенд</h2>
+  <div class="grid">
+    <article class="card"><h3>Системный поддомен</h3><p>На staging взять штатный поддомен тестового продавца. Проверить форму и API на подготовленном синтетическом случае, чтобы получить исходный результат без изменений DNS.</p></article>
+    <article class="card"><h3>Кастомный поддомен</h3><p>Использовать активный QA-домен того же продавца или подключить свободный поддомен тестовой зоны. Применить DNS-записи, выданные выбранным окружением, дождаться активации и действительного HTTPS.</p></article>
+    <article class="card"><h3>Локальный аналог</h3><p>Назначить второе локальное имя тестовому продавцу и направить его на локальный прокси. Маршрутизировать страницу в сервис рендера, отправку формы в сервис записи. Сохранить исходный hostname на обоих путях.</p></article>
+  </div>
+  <ol>
+    <li>Зафиксировать версии запущенных сервисов, окружение, владельца домена и источник тестовых данных. Для каждого успешного POST использовать отдельный активный случай.</li>
+    <li>На обоих доменах открыть активную ссылку, проверить данные и отправить корректный VAT. После успеха открыть исходную ссылку в новой вкладке. Проверить, что устаревшая форма не отдаётся с внешнего входа.</li>
+    <li>Если страница не открылась, вначале определить, какой сервис вернул ответ. Если форма открылась, а отправка вернула ошибку, проверить origin, привязку домена продавцу и ответ API. Если сохранение прошло, а старая форма осталась, сверить состояние на backend и поведение кэша.</li>
+  </ol>
+</section>
+
+<section id="plan" aria-labelledby="plan-title">
+  <h2 id="plan-title">План проверки</h2>
+  <p class="intro">Использовать вымышленные записи, тестовый платёжный режим и перехват исходящих писем. Контролировать ответы VIES на границе интеграции. На каждый сценарий фиксировать версию, ожидаемый и наблюдаемый результат, ответ API и фактические изменения.</p>
+  <div class="table"><table aria-label="Сценарии проверки VAT"><thead><tr><th>Сценарий</th><th>Действие</th><th>Ожидание</th></tr></thead><tbody>
+    <tr><td>Настройки по умолчанию</td><td>Открыть экран свежего и существующего продавца. Проверить видимость при включённом и выключенном rollout.</td><td>Отображаемые настройки совпадают с сохранёнными и заявленными default-значениями.</td></tr>
+    <tr><td>Сохранение</td><td>Сменить правило, выключить fallback, сохранить, перезагрузить. Включить снова.</td><td>Выбранное правило сохраняется. Валюта, счёт и другие настройки не меняются.</td></tr>
+    <tr><td>Контракт и роли</td><td>Проверить новый и старый клиент, некорректные значения и разные роли.</td><td>Предсказуемая совместимость, верная проверка прав и отсутствие частичной записи.</td></tr>
+    <tr><td>Открытие ссылки</td><td>Сравнить обе формы URL, домены, локали, данные и бренд.</td><td>Рендер и начальные данные правильные. Неактивный случай закрыт.</td></tr>
+    <tr><td>Исправление номера</td><td>Отправить valid, invalid, неправильный формат и временный сбой VIES.</td><td>Только valid сохраняется. Ошибки различимы, исправление можно повторить.</td></tr>
+    <tr><td>Отключение ссылки</td><td>Повторно открыть ссылку после успешного исправления, в том числе через внешний вход.</td><td>Старая форма не выдаётся из кэша, повторная запись невозможна.</td></tr>
+    <tr><td>Форматы стран</td><td>Проверить префикс и выбранную страну, особые форматы и номера с лишними символами.</td><td>Поддерживаемые номера проходят; неверный формат отклонён до VIES.</td></tr>
+    <tr><td>Checkout</td><td>Пройти valid, invalid, сбой с fallback OFF/ON и покупку без EU VAT. Сравнить стандартный и отложенный платёж.</td><td>Итог оплаты, VAT и фоновые действия совпадают с выбранным сценарием.</td></tr>
+    <tr><td>Неуспешная оплата</td><td>Отменить, отклонить или оставить платёж в ожидании после срабатывания fallback.</td><td>У незавершённой продажи нет уведомления о покупке и финансового действия.</td></tr>
+    <tr><td>Retry и задержки</td><td>Дать несколько сбоев, затем valid или invalid. Проверить график 0/3/6/7, повторную и частичную доставку.</td><td>Validity и письма соответствуют исходу. Случай можно восстановить после временного сбоя.</td></tr>
+    <tr><td>Письма</td><td>Сверить получателей, язык, ссылку и шаблон на каждом шаге. Изменить правило в активном периоде.</td><td>Письмо отражает правило, применимое в этот момент. Ссылка ведёт на правильный тестовый домен.</td></tr>
+    <tr><td>Гонка на седьмой день</td><td>Отправить исправление до и одновременно с финальным действием.</td><td>Один согласованный результат и однозначное состояние ссылки.</td></tr>
+    <tr><td>Сохранение продажи</td><td>Оставить номер invalid. Сравнить счёт, PDF, суммы, доступ и продление.</td><td>VAT-номер убран в нужной области, продажа активна. Суммы и операции совпадают с правилом.</td></tr>
+    <tr><td>Возврат разовой оплаты</td><td>Сравнить успех, ожидание подтверждения, отказ и повтор платёжного события.</td><td>Возвращается нужный платёж один раз. Клиент получает подтверждение после результата.</td></tr>
+    <tr><td>Отмена подписки</td><td>Проверить состояние у платёжного провайдера, ближайшее продление и конец оплаченного периода.</td><td>Прошлые платежи сохраняются, следующее списание отсутствует, доступ заканчивается по правилу.</td></tr>
+    <tr><td>Оплата частями</td><td>Проверить первый и повторный взнос, смешанный заказ и уже завершённый план.</td><td>Сумма возврата, будущие списания и доступ совпадают с согласованным правилом.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="release" aria-labelledby="release-title">
+  <h2 id="release-title">Перед выпуском</h2>
+  <ol>
+    <li>Сверить фактическую версию каждого сервиса, наличие маршрутов, миграций и фоновых обработчиков.</li>
+    <li>Проверить отдельно настройки продавца, видимость интерфейса и механизм включения backend.</li>
+    <li>Доказать, что выкладка и повторные сообщения не приводят к лишним письмам, возвратам или отменам.</li>
+    <li>Подготовить наблюдение за частотой fallback, задержками, ошибками и финансовыми операциями в ожидании. Учесть открытые случаи при откате.</li>
+  </ol>
+  <p><a href="https://ec.europa.eu/taxation_customs/vies/">VIES Европейской комиссии</a></p>
+</section>
+</main>
+</body>
+</html>
